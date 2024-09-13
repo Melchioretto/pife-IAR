@@ -1,0 +1,11 @@
+O jogo de Pife com inteligência artificial foi implementado com dois participantes: "jogador 1", que é o usuário, e "jogador 2", controlado pela máquina. A máquina faz suas jogadas com base em heurísticas pré-programadas, criadas pelos desenvolvedores, que seguem as regras e estratégias do Pife. Essas heurísticas permitem que o jogador 2 execute jogadas lógicas e calculadas, sem depender de fatores aleatórios.
+
+regras do pife:
+	preparação: O jogo de Pife é jogado com o baralho fracês que possui um ranking de cartas que vai de "K Q J 10 9 8 7 6 5 4 3 2 A" e cada uma dessas cartas possui uma versão com cada um dos naipes "pau, copa, ouro e espada". São utilizados 2 unidades do baralho para jogar, totalizando 104 cartas tendo 2 cartas iguais no baralho.
+	inicio: Primeiro o baralho é embaralhado, logo após cada jogador recebe 9 cartas então uma carta aleatoriamente é virada para cima e a sucessora dessa carta e possuindo a mesma cor se torna o coringa.
+	turno: cada jogador compra uma carta, verifica se vai ficar com ela ou se vai jogar fora.
+		se ficar: escolher uma outra para jogar fora
+		se não ficar: jogar a carta comprada fora
+	monte de descarte: as cartas jogadas fora ficam aqui, o jogador pode optar em comprar uma carta nova ou pegar uma carta do monte de descarte.
+	
+	
