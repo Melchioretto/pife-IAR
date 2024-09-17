@@ -131,7 +131,7 @@ class Jogo:
         self.jogador_maquina.ordenar_mao()
 
     def jogada_humano(self, pegar_descartada):
-        print("Iniciando jogada do humano...")
+        print("Iniciando a sua jogada...")
         if pegar_descartada and self.carta_descartada:
             self.jogador_humano.receber_carta(self.carta_descartada)
             self.carta_descartada = None
@@ -191,12 +191,12 @@ class Jogo:
         return None
     
 def exibir_estado_jogo(jogo):
-    print("\n" + "=" * 40)
+    print("\n" + "=" * 50)
     print(f"Sua mão: {jogo.jogador_humano.mostrar_mao()}")
     print(f"Cartas da Máquina: {len(jogo.jogador_maquina.mao)}")
     print(f"Carta descartada: {jogo.carta_descartada}")
     print(f"Cartas no baralho: {len(jogo.baralho)}")
-    print("=" * 40 + "\n")
+    print("=" * 50 + "\n")
 
 def main():
     jogo = Jogo()
@@ -256,3 +256,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
