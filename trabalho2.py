@@ -244,6 +244,15 @@ while True:
         baralho.mostrar_monte_compra()
     elif acao == 's':
         break
-
+    elif acao == 'd':
+        escolha = input("Qual carta você vai escolher para descartar ?")
+        indice = int(escolha) - 1
+        if 0 <= indice < len(jogador_humano.mao):
+            carta_descartada = jogador_humano.jogar_carta(indice)
+            baralho.adicionar_ao_monte_descarte(carta_descartada)  # Adiciona a carta descartada ao monte
+            print(f"Você descartou: {carta_descartada}")
+        else:
+            print("Escolha inválida, tente novamente.")
+            continue
     else:
         print("Ação inválida.")
