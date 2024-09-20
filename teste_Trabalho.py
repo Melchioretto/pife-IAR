@@ -2,7 +2,7 @@ import random
 import time
 
 class Carta:
-    naipes = ["♠", "♥", "♦", "♣"]
+    naipes = ["♣": "preto", "♥": "vermelho", "♦": "vermelho", "♠": "preto"]
     valores = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
     def __init__(self, valor, naipe):

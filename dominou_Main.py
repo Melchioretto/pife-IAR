@@ -17,7 +17,7 @@ def encontrar_cobra_inicial(pecas_computador: List[Peca], pecas_jogador: List[Pe
     peca_inicial = max((peca for peca in todas_pecas if peca[0] == peca[1]), key=lambda x: x[0], default=None)
     if peca_inicial is None:
         peca_inicial = max(todas_pecas, key=lambda x: x[0] + x[1])
-    
+
     if peca_inicial in pecas_computador:
         pecas_computador.remove(peca_inicial)
     else:
@@ -37,13 +37,29 @@ def conectar_peca(peca: Peca, cobra: Cobra) -> None:
     else:
         cobra.append(peca[::-1])
 
-def realizar_jogada(jogador: str, pecas: List[Peca], cobra: Cobra, estoque: List[Peca]) -> bool:
+def calcular_pontos(pecas: List[Peca]) -> int:
+    return sum(sum(peca) for peca in pecas)
+
+def estrategia_computador(pecas: List[Peca], cobra: Cobra, dificuldade: str) -> Peca:
+    pecas_validas = [peca for peca in pecas if pode_conectar(peca, cobra)]
+    if not pecas_validas:
+        return None
+
+    if dificuldade == "fácil":
+        return random.choice(pecas_validas)
+    elif dificuldade == "médio":
+        return max(pecas_validas, key=lambda p: p[0] + p[1])
+    else:  # difícil
+        contagem = {i: sum(p.count(i) for p in cobra + pecas) for i in range(7)}
+        return max(pecas_validas, key=lambda p: contagem[p[0]] + contagem[p[1]])
+
+def realizar_jogada(jogador: str, pecas: List[Peca], cobra: Cobra, estoque: List[Peca], dificuldade: str) -> bool:
     if jogador == "computador":
-        for peca in pecas:
-            if pode_conectar(peca, cobra):
-                conectar_peca(peca, cobra)
-                pecas.remove(peca)
-                return True
+        peca = estrategia_computador(pecas, cobra, dificuldade)
+        if peca:
+            conectar_peca(peca, cobra)
+            pecas.remove(peca)
+            return True
         if estoque:
             pecas.append(estoque.pop())
         return False
@@ -78,40 +94,62 @@ def exibir_estado_jogo(estoque: List[Peca], pecas_computador: List[Peca], cobra:
     print(f'Peças do computador: {len(pecas_computador)}\n')
     print(' '.join(str(peca) for peca in cobra) + '\n')
 
-def jogar_domino():
-    pecas = criar_pecas()
-    estoque, pecas_computador, pecas_jogador = distribuir_pecas(pecas)
-    cobra = [encontrar_cobra_inicial(pecas_computador, pecas_jogador)]
-    vez_jogador = len(pecas_jogador) > len(pecas_computador)
-
+def escolher_dificuldade() -> str:
     while True:
-        exibir_estado_jogo(estoque, pecas_computador, cobra)
+        escolha = input("Escolha a dificuldade (1 para fácil, 2 para médio, 3 para difícil): ")
+        if escolha in ['1', '2', '3']:
+            return ['fácil', 'médio', 'difícil'][int(escolha) - 1]
+        print("Escolha inválida. Por favor, digite 1, 2 ou 3.")
 
-        if not pecas_jogador:
-            print("Você venceu!")
-            break
-        if not pecas_computador:
-            print("O computador venceu!")
-            break
-        if verificar_vitoria(cobra):
-            print("O jogador venceu!" if vez_jogador else "O computador venceu!")
-            break
-        if not estoque and not any(pode_conectar(p, cobra) for p in pecas_jogador + pecas_computador):
-            print("Empate! Ninguém pode jogar.")
-            break
+def jogar_novamente() -> bool:
+    while True:
+        escolha = input("Deseja jogar novamente? (s/n): ").lower()
+        if escolha in ['s', 'n']:
+            return escolha == 's'
+        print("Escolha inválida. Por favor, digite 's' para sim ou 'n' para não.")
 
-        if vez_jogador:
-            print("\nSua vez de jogar.")
-            realizar_jogada("jogador", pecas_jogador, cobra, estoque)
-        else:
-            print("\nVez do computador. Pressione Enter para continuar...")
-            input()
-            realizar_jogada("computador", pecas_computador, cobra, estoque)
+def jogar_domino():
+    while True:
+        dificuldade = escolher_dificuldade()
+        pecas = criar_pecas()
+        estoque, pecas_computador, pecas_jogador = distribuir_pecas(pecas)
+        cobra = [encontrar_cobra_inicial(pecas_computador, pecas_jogador)]
+        vez_jogador = len(pecas_jogador) > len(pecas_computador)
 
-        vez_jogador = not vez_jogador
+        while True:
+            exibir_estado_jogo(estoque, pecas_computador, cobra)
+
+            if not pecas_jogador:
+                print("Você venceu!")
+                break
+            if not pecas_computador:
+                print("O computador venceu!")
+                break
+            if verificar_vitoria(cobra):
+                print("O jogador venceu!" if vez_jogador else "O computador venceu!")
+                break
+            if not estoque and not any(pode_conectar(p, cobra) for p in pecas_jogador + pecas_computador):
+                print("Empate! Ninguém pode jogar.")
+                break
+
+            if vez_jogador:
+                print("\nSua vez de jogar.")
+                realizar_jogada("jogador", pecas_jogador, cobra, estoque, dificuldade)
+            else:
+                print("\nVez do computador. Pressione Enter para continuar...")
+                input()
+                realizar_jogada("computador", pecas_computador, cobra, estoque, dificuldade)
+
+            vez_jogador = not vez_jogador
+
+        if not jogar_novamente():
+            print("Obrigado por jogar! Até a próxima!")
+            break
 
 if __name__ == "__main__":
     jogar_domino()
+
+
     
     
 # ======================================================================
